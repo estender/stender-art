@@ -49,6 +49,11 @@ export default function Home() {
                 >
                   <Pane padding={16}>
                     <Heading size={600}>Art by Eric Stender</Heading>
+                    <Paragraph size={400}>
+                      <a href="https://stender.io" target="_blank">
+                        https://stender.io
+                      </a>
+                    </Paragraph>
                     <Paragraph size={400}>Made with JavaScript & p5</Paragraph>
                   </Pane>
                 </Pane>
