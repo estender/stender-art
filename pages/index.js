@@ -81,13 +81,13 @@ export default function Home() {
               </SideSheet>
               <MenuOpenIcon
                 onClick={() => setState({ isShown: true })}
-                marginLeft={10}
+                marginLeft={15}
                 marginTop={10}
                 position="absolute"
                 zIndex={1}
                 cursor="pointer"
                 color="#999"
-                size={32}
+                size={40}
               />
               <RepeatIcon
                 onClick={() =>
@@ -95,13 +95,13 @@ export default function Home() {
                     selected: (state.selected + 1) % artCollection.length,
                   })
                 }
-                marginLeft={10}
-                marginTop={50}
+                marginLeft={15}
+                marginTop={62}
                 position="absolute"
                 zIndex={1}
                 cursor="pointer"
                 color="#999"
-                size={24}
+                size={30}
               />
               {P5Wrapper ? (
                 <P5Wrapper sketch={artCollection[state.selected].script} />
