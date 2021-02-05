@@ -6,18 +6,7 @@ export default {
 	script: function(p) {
 		let counter = 0;
 
-		let palate = [
-			[111, 111, 222],
-			[178, 73, 152],
-			[143, 73, 92],
-			[111, 66, 78],
-			[143, 73, 121],
-			[143, 73, 152],
-			[63, 73, 122],
-			[93, 53, 152],
-			[143, 73, 112],
-			[111, 111, 222],
-		];
+		let palate;
 
 		const tris = [];
 
@@ -26,6 +15,23 @@ export default {
 			p.angleMode(p.DEGREES);
 			p.background(244, 244, 255);
 			p.noStroke();
+
+			palate = [
+				[111, 111, 222],
+				[178, 73, 152],
+				[143, 73, 92],
+				[111, 66, 78],
+				[143, 73, 121],
+				[143, 73, 152],
+				[63, 73, 122],
+				[93, 53, 152],
+				[143, 73, 112],
+				[111, 111, 222],
+			].map(rgb => {
+				let c = p.color(...rgb);
+				c.setAlpha(190);
+				return c;
+			});
 
 			for (let i = 0; i < TRI_COUNT; i++) {
 				let t = {
@@ -40,8 +46,10 @@ export default {
 		}
 
 		p.draw = function() {
+			let midColor = p.color(225, 225, 225);
+
 			p.clear();
-			p.fill(225, 225, 225);
+			p.fill(midColor);
 			p.translate(p.width / 2, p.height / 2);
 			p.triangle(p.width, -1 * p.height, -1 * p.width, 0, -1 * p.width, p.height);
 			p.triangle(
@@ -55,7 +63,7 @@ export default {
 			p.push();
 			for (let i = 0; i < tris.length; i++) {
 				const t = tris[i];
-				p.fill(t.color[0], t.color[1], t.color[2]);
+				p.fill(t.color);
 				p.rotate((t.rotation + counter / 200) % 360);
 				let randoModifier = i % 2 == 0 ? -1 : 1;
 				let sinC = p.sin((counter / 10 + i * 5) % 360) * 2 * randoModifier;
@@ -69,7 +77,7 @@ export default {
 				);
 			}
 			p.pop();
-			p.fill(225, 225, 225);
+			p.fill(midColor);
 			p.triangle(0, 0, p.width, 0, p.width, 0.5 * p.height);
 			p.triangle(0, 0, -1 * p.width, 0, -1 * p.width, -0.5 * p.height);
 			p.triangle(0, 0, 0, -1 * p.height, 0.3 * p.width, -1 * p.height);
