@@ -48,24 +48,15 @@ export default {
           let y = midY + (CURVE_HEIGHT / ROWS) * (ROWS / 2 - i);
           let sinX = p.sin(x / 30 - counter / 200) * 20;
           let rowAlpha = p.abs(p.tan(y + counter * 0.01) * 128);
-          let firstBump = 0;
           let bumpWidth = 20;
           let bumpMid = COLS / 2;
-          if (true) {
-            // }  (Math.floor((j + counter) / 5) % 2 == 0)) {
-            firstBump =
-              (bumpWidth / 2 - p.abs(j - bumpMid)) *
-              2 *
-              p.tan((counter * 0.005) % 360);
-          } else {
-            firstBump =
-              (bumpWidth / 2 - abs(j - bumpMid)) *
-              -2 *
-              sin((counter * 0.0001) % 360);
-          }
+          let bump =
+            (bumpWidth / 2 - p.abs(j - bumpMid)) *
+            -1 *
+            p.tan((counter * 0.005) % 360);
           p.fill(rowColors[i][0], rowColors[i][1], rowColors[i][2], rowAlpha);
           p.noStroke();
-          p.ellipse(x, y + sinX + firstBump, CIRCLE_SIZE, CIRCLE_SIZE);
+          p.ellipse(x, y + sinX + bump, CIRCLE_SIZE, CIRCLE_SIZE);
         }
       }
 
