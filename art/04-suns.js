@@ -2,6 +2,7 @@ const CIRCLE_SIZE = 20;
 
 export default {
   name: 'Too Much Sun',
+  iconColor: '#fff',
   script: function (p) {
     let rows, cols, circleDiameter;
     p.setup = function () {

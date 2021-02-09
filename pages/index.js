@@ -86,7 +86,7 @@ export default function Home() {
                 position="absolute"
                 zIndex={1}
                 cursor="pointer"
-                color="#999"
+                color={artCollection[state.selected].iconColor || '#999'}
                 size={40}
               />
               <RepeatIcon
@@ -100,7 +100,7 @@ export default function Home() {
                 position="absolute"
                 zIndex={1}
                 cursor="pointer"
-                color="#999"
+                color={artCollection[state.selected].iconColor || '#999'}
                 size={30}
               />
               {P5Wrapper ? (

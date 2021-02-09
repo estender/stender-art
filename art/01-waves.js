@@ -5,7 +5,8 @@ const CIRCLE_SIZE = 8;
 
 export default {
   name: 'Mountains & Waves',
-  script: function(p) {
+  iconColor: 'rgb(111, 111, 222)',
+  script: function (p) {
     let counter = 0;
 
     p.setup = function () {
