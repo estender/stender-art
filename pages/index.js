@@ -30,7 +30,7 @@ export default function Home() {
         <Component
           initialState={{
             isShown: false,
-            selected: Math.floor(Math.random() * artCollection.length),
+            selected: 0,
           }}
         >
           {({ state, setState }) => (
