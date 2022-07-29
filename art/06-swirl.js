@@ -2,15 +2,11 @@ export default {
   name: 'Swirls',
   iconColor: '#aaa',
   script: function (p) {
-    let s1, s2;
-    let gravity = 9.0;
-    let mass = 2.0;
-
-    let angle = 0;
+    let globalAngle = 0;
 
     let jointCount = 6;
-    let jointLength = 150;
     let jointRadius = 5;
+    let jointLength;
 
     let legCount = 100;
 
@@ -39,8 +35,62 @@ export default {
       }
 
       return p.color(r, g, b);
+    };
+
+    const Joint = function (idx) {
+      this.x1 = 0;
+      this.y1 = 0;
+      this.x2 = 0;
+      this.y2 = 0;
+      this.index = idx;
+
+      this.update = function (x1, y1, x2, y2) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+      };
+
+      this.display = function (legIndex) {
+        let c = rainbowColor((legIndex / legCount) * 360);
+        p.stroke(c);
+        p.strokeWeight(0.5);
+        p.line(this.x1, this.y1, this.x2, this.y2);
+      };
     }
 
+    const Leg = function (x0, y0, idx) {
+      this.x = x0; // The x- and y-coordinates
+      this.y = y0;
+      this.index = idx;
+      this.joints = [];
+      for (let i = 0; i < jointCount; i++) {
+        this.joints.push(new Joint(i));
+      }
+
+      this.update = function (newAngle) {
+        let x1, x2, y1, y2;
+        this.angle = (newAngle + (this.index * 360) / legCount) % 360;
+        x1 = this.x;
+        y1 = this.y;
+        for (let i = 0; i < jointCount; i++) {
+          x2 = x1 + (jointLength + i) * p.cos(this.angle);
+          y2 = y1 + (jointLength + i) * p.sin(this.angle);
+          this.joints[i].update(x1, y1, x2, y2);
+          x1 = x2;
+          y1 = y2;
+        }
+      };
+
+      this.display = function () {
+        let idx = this.index;
+        this.joints.forEach(function (joint) {
+          joint.display(idx);
+        })
+      };
+    }
+
+    let legs = [];
 
     p.setup = function () {
       p.angleMode(p.DEGREES);
@@ -48,38 +98,22 @@ export default {
       centerX = p.width / 2;
       centerY = p.height / 2;
 
-      jointLength = Math.max(centerX, centerY) / (jointCount-1);
+      jointLength = Math.max(centerX, centerY) / (jointCount - 1);
+
+      for (let i = 0; i < legCount; i++) {
+        legs.push(new Leg(centerX, centerY, i));
+      }
     };
 
     p.draw = function () {
       p.background(0);
-      let x1, x2, y1, y2;
 
       for (let i = 0; i < legCount; i++) {
-        let thisAngle = (angle + (i * 360) / legCount) % 360;
-        x1 = p.width / 2;
-        y1 = p.height / 2;
-
-        for (let j = 1; j <= jointCount; j++) {
-          x2 = x1 + (jointLength + j) * p.cos(thisAngle);
-          y2 = y1 + (jointLength + j) * p.sin(thisAngle);
-
-          p.noStroke();
-          let lineConstant = 256 * (Math.abs(p.sin(thisAngle)));
-          let c = rainbowColor(((i - 1) / legCount) * 359);
-          p.stroke(c);
-          // p.strokeWeight((5 * Math.pow(j, 2)) / Math.pow(jointCount, 2));
-          p.strokeWeight((5 * j) / jointCount);
-          p.strokeWeight(0.5);
-
-          p.line(x1, y1, x2, y2);
-
-          x1 = x2;
-          y1 = y2;
-        }
+        legs[i].update(globalAngle);
+        legs[i].display();
       }
 
-      angle = (angle + 0.2) % 360;
+      globalAngle = (globalAngle + 0.2) % 360;
     };
   },
 };
