@@ -3,10 +3,10 @@ import Kaleidoscope from './02-kaleidoscope';
 import Triangles from './03-triangles';
 import Suns from './04-suns';
 import Camouflage from './05-camo';
-import Swirl from './06-swirl';
+import Clover from './06-clover';
 
 export const artCollection = [
-  Swirl,
+  Clover,
   Camouflage,
   Suns,
   Triangles,
