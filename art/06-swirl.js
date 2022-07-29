@@ -1,5 +1,5 @@
 export default {
-  name: 'Swirls',
+  name: 'Color Clover',
   iconColor: '#aaa',
   script: function (p) {
     let globalAngle = 0;
