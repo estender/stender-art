@@ -21,18 +21,18 @@ export default {
     let rowCount, colCount;
     let nodes = [];
 
-    const creepDistance = 8;
-    const nodeSize = 30;
+    const creepDistance = 20;
+    const nodeSize = 24;
     const colorCount = 30;
     const lineColor = p.color(80, 80, 80);
 
-    // const pallate = [
-    //   [207, 226, 243],
-    //   [244, 204, 204],
-    //   [255, 242, 204],
-    //   [217, 234, 211],
-    //   [252, 229, 205],
-    // ].map(([r, g, b]) => p.color(r, g, b));
+// const pallate = [
+//   [207, 226, 243],
+//   [244, 204, 204],
+//   [255, 242, 204],
+//   [217, 234, 211],
+//   [252, 229, 205],
+// ].map(([r, g, b]) => p.color(r, g, b));
 
 //     const pallate = [
 //       [231, 213, 185],
@@ -43,7 +43,6 @@ export default {
 //     ].map(([r, g, b]) => p.color(r, g, b));
 
     const randomColor = function() {
-      // return Math.floor(30 + 50 * Math.floor(4 * Math.random()));
       return Math.floor(30 + 200 * Math.random());
     }
 
@@ -64,43 +63,52 @@ export default {
       return Math.max(min, Math.min(val, max));
     }
 
-    const findValidNeighbors = function (i, j, depth = 0) {
+    const findValidNeighbors = function (visited, i, j, depth = 0) {
       let neighbors = [];
+      visited[i][j] = true;
 
       if (i - 1 >= 0) {
         if (nodes[i][j] !== nodes[i - 1][j]) {
           neighbors.push([i - 1, j]);
-        } else if (depth > 0) {
-          neighbors = neighbors.concat(findValidNeighbors(i - 1, j, depth - 1));
+        } else if (depth > 0 && !visited[i - 1][j]) {
+          neighbors = neighbors.concat(
+            findValidNeighbors(visited, i - 1, j, depth - 1)
+          );
         }
       }
 
       if (i + 1 < rowCount) {
         if (nodes[i][j] !== nodes[i + 1][j]) {
           neighbors.push([i + 1, j]);
-        } else if (depth > 0) {
-          neighbors = neighbors.concat(findValidNeighbors(i + 1, j, depth - 1));
+        } else if (depth > 0 && !visited[i + 1][j]) {
+          neighbors = neighbors.concat(
+            findValidNeighbors(visited, i + 1, j, depth - 1)
+          );
         }
       }
 
       if (j - 1 >= 0) {
         if (nodes[i][j] !== nodes[i][j - 1]) {
           neighbors.push([i, j - 1]);
-        } else if (depth > 0) {
-          neighbors = neighbors.concat(findValidNeighbors(i, j - 1, depth - 1));
+        } else if (depth > 0 && !visited[i][j - 1]) {
+          neighbors = neighbors.concat(
+            findValidNeighbors(visited, i, j - 1, depth - 1)
+          );
         }
       }
 
       if (j + 1 < colCount) {
         if (nodes[i][j] !== nodes[i][j + 1]) {
           neighbors.push([i, j + 1]);
-        } else if (depth > 0) {
-          neighbors = neighbors.concat(findValidNeighbors(i, j + 1, depth - 1));
+        } else if (depth > 0 && !visited[i][j + 1]) {
+          neighbors = neighbors.concat(
+            findValidNeighbors(visited, i, j + 1, depth - 1)
+          );
         }
       }
 
       return neighbors;
-    }
+    };
 
     // const updateRandomNeighborSimple = function () {
     //   let dx, dy;
@@ -138,7 +146,13 @@ export default {
     const updateRandomNeighbor = function () {
       let chosenI = Math.floor(Math.random() * rowCount);
       let chosenJ = Math.floor(Math.random() * colCount);
-      const neighbors = findValidNeighbors(chosenI, chosenJ, creepDistance);
+      const visited = nodes.map(row => row.map(() => false));
+      const neighbors = findValidNeighbors(
+        visited,
+        chosenI,
+        chosenJ,
+        creepDistance
+      );
 
       for (let n of neighbors) {
         nodes[n[0]][n[1]] = nodes[chosenI][chosenJ];
@@ -286,10 +300,6 @@ export default {
             p.line(x + nodeSize, y, x + nodeSize, y + nodeSize);
             p.noStroke();
           }
-
-          // p.stroke('#000');
-          // p.noFill();
-          // p.rect(x, y, nodeSize, nodeSize);
         }
       }
     };
