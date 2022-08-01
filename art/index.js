@@ -4,10 +4,10 @@ import Triangles from './03-triangles';
 import Suns from './04-suns';
 import Camouflage from './05-camo';
 import Clover from './06-clover';
-import GridFight from './07-grid-fight';
+import TurfWar from './07-turf-war';
 
 export const artCollection = [
-  GridFight,
+  TurfWar,
   Clover,
   Camouflage,
   Suns,

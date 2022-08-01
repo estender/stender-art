@@ -15,7 +15,7 @@
 // ];
 
 export default {
-  name: 'Grid Fight',
+  name: 'Turf War',
   iconColor: '#000',
   script: function (p) {
     let rowCount, colCount;
