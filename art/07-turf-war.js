@@ -55,14 +55,6 @@ export default {
       return pallate[Math.floor(Math.random() * pallate.length)];
     }
 
-    const oneOrNegOne = function(){
-      return Math.random() > 0.5 ? 1 : -1;
-    }
-
-    function clamp(val, min, max) {
-      return Math.max(min, Math.min(val, max));
-    }
-
     const findValidNeighbors = function (visited, i, j, depth = 0) {
       let neighbors = [];
       visited[i][j] = true;
