@@ -19,8 +19,12 @@ export default {
   iconColor: '#000',
   script: function (p) {
     let rowCount, colCount;
-    let nodeSize = 25;
     let nodes = [];
+
+    const creepDistance = 8;
+    const nodeSize = 30;
+    const colorCount = 30;
+    const lineColor = p.color(80, 80, 80);
 
     // const pallate = [
     //   [207, 226, 243],
@@ -38,17 +42,17 @@ export default {
 // //      [0, 0, 0],
 //     ].map(([r, g, b]) => p.color(r, g, b));
 
-    const random255 = function() {
+    const randomColor = function() {
       // return Math.floor(30 + 50 * Math.floor(4 * Math.random()));
       return Math.floor(30 + 200 * Math.random());
     }
 
     const pallate = [];
-    for (let i = 0; i<30; i++) {
-      pallate.push(p.color(random255(), random255(), random255()));
+    for (let i = 0; i < colorCount; i++) {
+      pallate.push(p.color(randomColor(), randomColor(), randomColor()));
     }
 
-    const randomPColor = function() {
+    const randomPallateColor = function() {
       return pallate[Math.floor(Math.random() * pallate.length)];
     }
 
@@ -134,7 +138,7 @@ export default {
     const updateRandomNeighbor = function () {
       let chosenI = Math.floor(Math.random() * rowCount);
       let chosenJ = Math.floor(Math.random() * colCount);
-      const neighbors = findValidNeighbors(chosenI, chosenJ, 8);
+      const neighbors = findValidNeighbors(chosenI, chosenJ, creepDistance);
 
       for (let n of neighbors) {
         nodes[n[0]][n[1]] = nodes[chosenI][chosenJ];
@@ -153,7 +157,7 @@ export default {
           nodes[i] = [];
         }
         for (let j = 0; j < colCount; j++) {
-          nodes[i][j] = randomPColor();
+          nodes[i][j] = randomPallateColor();
         }
       }
     };
@@ -165,8 +169,127 @@ export default {
 
       for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
+          // top-left corner coords
+          let x = i * nodeSize;
+          let y = j * nodeSize;
+          let half = nodeSize / 2;
+          let thisColor = nodes[i][j];
+
+          // main square
+          p.noStroke();
+          p.strokeWeight(1);
           p.fill(nodes[i][j]);
-          p.rect(i * nodeSize, j * nodeSize, nodeSize, nodeSize);
+          p.rect(x, y, nodeSize, nodeSize);
+
+          // corners
+          let leftColor = i > 0 && nodes[i-1][j];
+          let rightColor = i < rowCount - 1 && nodes[i+1][j];
+          let topColor = j > 0 && nodes[i][j-1];
+          let bottomColor = j < colCount - 1 && nodes[i][j+1];
+
+          let topLeftColor = i > 0 && j > 0 && nodes[i-1][j-1];
+          let topRightColor =
+            i < rowCount - 1 && j > 0 && nodes[i+1][j-1];
+          let bottomLeftColor = i > 0 && j < colCount - 1 && nodes[i-1][j+1];
+          let bottomRightColor = i < rowCount - 1 && j < colCount - 1 && nodes[i+1][j+1];
+
+          // if (leftColor && leftColor === bottomColor && leftColor === bottomLeftColor) {
+          //   p.fill(leftColor);
+          //   p.triangle(x, y + half, x, y + nodeSize, x + half, y + nodeSize);
+
+          //   if (thisColor !== leftColor) {
+          //     p.stroke(lineColor);
+          //     p.line(x, y + half, x + half, y + nodeSize);
+          //     p.noStroke();
+          //   }
+          // }
+
+          // if (
+          //   leftColor &&
+          //   leftColor === topColor &&
+          //   leftColor === topLeftColor
+          // ) {
+          //   p.fill(leftColor);
+          //   p.triangle(x, y, x, y + half, x + half, y);
+
+          //   if (thisColor !== leftColor) {
+          //     p.stroke(lineColor);
+          //     p.line(x + half, y, x, y + half);
+          //     p.noStroke();
+          //   }
+          // }
+
+          // if (
+          //   rightColor &&
+          //   rightColor === bottomColor &&
+          //   rightColor === bottomRightColor
+          // ) {
+          //   p.fill(rightColor);
+          //   p.triangle(
+          //     x + half,
+          //     y + nodeSize,
+          //     x + nodeSize,
+          //     y + nodeSize,
+          //     x + nodeSize,
+          //     y + half
+          //   );
+
+          //   if (thisColor !== rightColor) {
+          //     p.stroke(lineColor);
+          //     p.line(x + half, y + nodeSize, x + nodeSize, y + half);
+          //     // p.line(x + nodeSize, y + half, x + nodeSize, y + nodeSize);
+          //     if (thisColor !== leftColor && thisColor !== bottomColor) {
+          //       p.line(x + nodeSize, y, x + nodeSize, y + half);
+          //     }
+          //     p.noStroke();
+          //   }
+          // }
+
+          // if (
+          //   rightColor &&
+          //   rightColor === topColor &&
+          //   rightColor === topRightColor
+          // ) {
+          //   p.fill(rightColor);
+          //   p.triangle(x + half, y, x + nodeSize, y, x + nodeSize, y + half);
+
+          //   if (thisColor !== rightColor) {
+          //     p.stroke(lineColor);
+          //     p.line(x + half, y, x + nodeSize, y + half);
+          //     if (thisColor !== leftColor && thisColor !== topColor) {
+          //       p.line(x, y, x + half, y);
+          //     }
+          //     p.noStroke();
+          //   }
+          // }
+
+          if (thisColor !== topColor) {
+            p.stroke(lineColor);
+            p.line(x, y, x + nodeSize, y);
+            p.noStroke();
+          }
+
+          if (thisColor !== bottomColor) {
+            p.stroke(lineColor);
+            p.line(x, y + nodeSize, x + nodeSize, y + nodeSize);
+            p.noStroke();
+          }
+
+          if (thisColor !== leftColor) {
+            p.stroke(lineColor);
+            p.line(x, y, x, y + nodeSize);
+            p.noStroke();
+          }
+
+          if (thisColor !== rightColor) {
+            p.stroke(lineColor);
+            p.line(x + nodeSize, y, x + nodeSize, y + nodeSize);
+            p.noStroke();
+          }
+
+          // p.stroke('#000');
+          // p.noFill();
+          // p.rect(x, y, nodeSize, nodeSize);
         }
       }
     };
