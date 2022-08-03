@@ -1,15 +1,15 @@
-import { oneOrNegOne, shuffleArray } from './helpers';
+import { isOdd, oneOrNegOne, shuffleArray } from './helpers';
 
 export default {
   name: 'Fade to Mud',
   iconColor: '#000',
   script: function (p) {
     let rowCount, colCount;
+    let nodeSize;
     let nodes = [];
 
     const creepDistance = 20;
-    const nodeSize = 36;
-    const colorCount = 30;
+    const colorCount = 48;
     const lineColor = p.color(80, 80, 80);
 
     const randomColor = function() {
@@ -287,6 +287,7 @@ export default {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
 
+      nodeSize = Math.floor(Math.max(p.width, p.height) / 30);
       rowCount = Math.ceil(p.width / nodeSize);
       colCount = Math.ceil(p.height / nodeSize);
 
@@ -308,13 +309,21 @@ export default {
       p.background(0);
 
       if (flipQueueCounter <= 0) {
-        flipQueueCounter = flipQueue.length
+        flipQueueCounter = flipQueue.length;
         //shuffleArray(flipQueue);
         isMelting = !isMelting;
       }
 
+      // forceCheckboardModifier adds +/- 1 to 2nd tile flipped
+      // to random color, to force a different row to be
+      // flipped than the tile on the left
+      let forceCheckboardModifier =
+        isOdd(nodes[0].lengh) || flipQueueCounter <= 1 ? 0 : -1;
       let [chosenI1, chosenJ1] = flipQueue[flipQueueCounter - 1];
-      let [chosenI2, chosenJ2] = flipQueue[flipQueue.length - flipQueueCounter];;
+      let [chosenI2, chosenJ2] =
+        flipQueue[
+          flipQueue.length - flipQueueCounter - forceCheckboardModifier
+        ];
       if (isMelting) {
         updateRandomNeighborFadeWide(chosenI1, chosenJ1);
         updateRandomNeighborFadeWide(chosenI2, chosenJ2);
@@ -342,22 +351,23 @@ export default {
           p.rect(x, y, nodeSize, nodeSize);
 
           // corners
-          let leftColor = i > 0 && nodes[i-1][j];
-          let rightColor = i < rowCount - 1 && nodes[i+1][j];
-          let topColor = j > 0 && nodes[i][j-1];
-          let bottomColor = j < colCount - 1 && nodes[i][j+1];
+          let leftColor = i > 0 && nodes[i - 1][j];
+          let rightColor = i < rowCount - 1 && nodes[i + 1][j];
+          let topColor = j > 0 && nodes[i][j - 1];
+          let bottomColor = j < colCount - 1 && nodes[i][j + 1];
 
-          let topLeftColor = i > 0 && j > 0 && nodes[i-1][j-1];
-          let topRightColor =
-            i < rowCount - 1 && j > 0 && nodes[i+1][j-1];
-          let bottomLeftColor = i > 0 && j < colCount - 1 && nodes[i-1][j+1];
-          let bottomRightColor = i < rowCount - 1 && j < colCount - 1 && nodes[i+1][j+1];
+          let topLeftColor = i > 0 && j > 0 && nodes[i - 1][j - 1];
+          let topRightColor = i < rowCount - 1 && j > 0 && nodes[i + 1][j - 1];
+          let bottomLeftColor =
+            i > 0 && j < colCount - 1 && nodes[i - 1][j + 1];
+          let bottomRightColor =
+            i < rowCount - 1 && j < colCount - 1 && nodes[i + 1][j + 1];
 
           if (
             leftColor &&
             isSameColor(leftColor, bottomColor) &&
-            isSameColor(leftColor, bottomLeftColor))
-          {
+            isSameColor(leftColor, bottomLeftColor)
+          ) {
             p.fill(leftColor);
             p.triangle(x, y + half, x, y + nodeSize, x + half, y + nodeSize);
 

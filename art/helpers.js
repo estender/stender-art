@@ -1,9 +1,15 @@
-export function oneOrNegOne() {
-  return Math.random() > 0.5 ? 1 : -1;
-};
+
 
 export function clamp(val, min, max) {
   return Math.max(min, Math.min(val, max));
+}
+
+export function isOdd(val) {
+  return val % 2 === 1;
+}
+
+export function oneOrNegOne() {
+  return Math.random() > 0.5 ? 1 : -1;
 }
 
 export function shuffleArray(array) {

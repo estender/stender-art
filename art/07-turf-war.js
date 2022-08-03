@@ -19,11 +19,11 @@ export default {
   iconColor: '#000',
   script: function (p) {
     let rowCount, colCount;
+    let nodeSize;
     let nodes = [];
 
     const creepDistance = 20;
-    const nodeSize = 24;
-    const colorCount = 30;
+    const colorCount = 24;
     const lineColor = p.color(80, 80, 80);
 
 // const pallate = [
@@ -155,6 +155,7 @@ export default {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
 
+      nodeSize = Math.floor(Math.min(p.width, p.height) / 32);
       rowCount = Math.ceil(p.width / nodeSize);
       colCount = Math.ceil(p.height / nodeSize);
 
