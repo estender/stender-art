@@ -1,4 +1,4 @@
-import { isOdd, oneOrNegOne, shuffleArray } from './helpers';
+import { isOdd, oneOrNegOne } from './helpers';
 
 export default {
   name: 'Fade to Mud',
@@ -300,8 +300,6 @@ export default {
           flipQueue.push([i, j]);
         }
       }
-
-      // shuffleArray(flipQueue);
     };
 
 
@@ -310,7 +308,6 @@ export default {
 
       if (flipQueueCounter <= 0) {
         flipQueueCounter = flipQueue.length;
-        //shuffleArray(flipQueue);
         isMelting = !isMelting;
       }
 
