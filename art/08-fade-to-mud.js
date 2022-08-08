@@ -279,9 +279,9 @@ export default {
       };
     };
 
-    let flipQueue = [];
+    let flipQueue = []; // list of nodes
     let flipQueueCounter = 0;
-    let isMelting = false;
+    let isMelting = false; // true when tiles are lerping to brown, false when rebuilding random tiles
 
     p.setup = function () {
       p.createCanvas(p.windowWidth, p.windowHeight);
@@ -325,10 +325,10 @@ export default {
         updateRandomNeighborFadeWide(chosenI1, chosenJ1);
         updateRandomNeighborFadeWide(chosenI2, chosenJ2);
       } else {
-        if (flipQueueCounter % 2 == 0) {
-          nodes[chosenI1][chosenJ1] = randomPallateColor();
-        } else {
+        if (isOdd(flipQueueCounter)) {
           nodes[chosenI2][chosenJ2] = randomPallateColor();
+        } else {
+          nodes[chosenI1][chosenJ1] = randomPallateColor();
         }
       }
       flipQueueCounter--;
@@ -367,12 +367,6 @@ export default {
           ) {
             p.fill(leftColor);
             p.triangle(x, y + half, x, y + nodeSize, x + half, y + nodeSize);
-
-            // if (thisColor !== leftColor) {
-            //   p.stroke(lineColor);
-            //   p.line(x, y + half, x + half, y + nodeSize);
-            //   p.noStroke();
-            // }
           }
 
           if (
@@ -382,12 +376,6 @@ export default {
           ) {
             p.fill(leftColor);
             p.triangle(x, y, x, y + half, x + half, y);
-
-            // if (thisColor !== leftColor) {
-            //   p.stroke(lineColor);
-            //   p.line(x + half, y, x, y + half);
-            //   p.noStroke();
-            // }
           }
 
           if (
@@ -404,16 +392,6 @@ export default {
               x + nodeSize,
               y + half
             );
-
-            // if (thisColor !== rightColor) {
-            //   p.stroke(lineColor);
-            //   p.line(x + half, y + nodeSize, x + nodeSize, y + half);
-            //   // p.line(x + nodeSize, y + half, x + nodeSize, y + nodeSize);
-            //   if (thisColor !== leftColor && thisColor !== bottomColor) {
-            //     p.line(x + nodeSize, y, x + nodeSize, y + half);
-            //   }
-            //   p.noStroke();
-            // }
           }
 
           if (
@@ -423,15 +401,6 @@ export default {
           ) {
             p.fill(rightColor);
             p.triangle(x + half, y, x + nodeSize, y, x + nodeSize, y + half);
-
-            // if (thisColor !== rightColor) {
-            //   p.stroke(lineColor);
-            //   p.line(x + half, y, x + nodeSize, y + half);
-            //   if (thisColor !== leftColor && thisColor !== topColor) {
-            //     p.line(x, y, x + half, y);
-            //   }
-            //   p.noStroke();
-            // }
           }
 
           // if (!isSameColor(thisColor, topColor)) {
