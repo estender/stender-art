@@ -176,10 +176,8 @@ export default {
       return neighbors;
     };
 
-    const updateRandomNeighborFadeWide = function (chosenI, chosenJ) {
+    const lerpNeighborColor = function (chosenI, chosenJ) {
       let dx, dy;
-      // let chosenI = Math.floor(Math.random() * rowCount);
-      // let chosenJ = Math.floor(Math.random() * colCount);
 
       if (Math.random() > 0.5) {
         if (chosenI <= 0) {
@@ -232,53 +230,6 @@ export default {
       }
     };
 
-    const updateRandomNeighborFade = function () {
-      let dx, dy;
-      let chosenI = Math.floor(Math.random() * rowCount);
-      let chosenJ = Math.floor(Math.random() * colCount);
-
-      if (Math.random() > 0.5) {
-        if (chosenI <= 0) {
-          dx = 1;
-        } else if (chosenI >= rowCount - 1) {
-          dx = -1;
-        } else {
-          dx = oneOrNegOne();
-        }
-
-        dy = 0;
-      } else {
-        dx = 0;
-        if (chosenJ <= 0) {
-          dy = 1;
-        } else if (chosenJ >= colCount - 1) {
-          dy = -1;
-        } else {
-          dy = oneOrNegOne();
-        }
-      }
-
-      const midColor = p.lerpColor(nodes[chosenI][chosenJ], nodes[chosenI + dx][chosenJ + dy], 0.5);
-      nodes[chosenI][chosenJ] = midColor;
-      nodes[chosenI + dx][chosenJ + dy] = midColor;
-    };
-
-    const updateRandomNeighbor = function () {
-      let chosenI = Math.floor(Math.random() * rowCount);
-      let chosenJ = Math.floor(Math.random() * colCount);
-      const visited = nodes.map(row => row.map(() => false));
-      const neighbors = findValidNeighbors(
-        visited,
-        chosenI,
-        chosenJ,
-        creepDistance
-      );
-
-      for (let n of neighbors) {
-        nodes[n[0]][n[1]] = nodes[chosenI][chosenJ];
-      };
-    };
-
     let flipQueue = []; // list of nodes
     let flipQueueCounter = 0;
     let isMelting = false; // true when tiles are lerping to brown, false when rebuilding random tiles
@@ -322,9 +273,11 @@ export default {
           flipQueue.length - flipQueueCounter - forceCheckboardModifier
         ];
       if (isMelting) {
-        updateRandomNeighborFadeWide(chosenI1, chosenJ1);
-        updateRandomNeighborFadeWide(chosenI2, chosenJ2);
+        // lerp colors to browns
+        lerpNeighborColor(chosenI1, chosenJ1);
+        lerpNeighborColor(chosenI2, chosenJ2);
       } else {
+        // rebuild checker grid of random colors
         if (isOdd(flipQueueCounter)) {
           nodes[chosenI2][chosenJ2] = randomPallateColor();
         } else {
@@ -341,13 +294,13 @@ export default {
           let half = nodeSize / 2;
           let thisColor = nodes[i][j];
 
-          // main square
+          // draw main square
           p.noStroke();
           p.strokeWeight(1);
           p.fill(nodes[i][j]);
           p.rect(x, y, nodeSize, nodeSize);
 
-          // corners
+          // draw corners
           let leftColor = i > 0 && nodes[i - 1][j];
           let rightColor = i < rowCount - 1 && nodes[i + 1][j];
           let topColor = j > 0 && nodes[i][j - 1];
@@ -402,30 +355,6 @@ export default {
             p.fill(rightColor);
             p.triangle(x + half, y, x + nodeSize, y, x + nodeSize, y + half);
           }
-
-          // if (!isSameColor(thisColor, topColor)) {
-          //   p.stroke(lineColor);
-          //   p.line(x, y, x + nodeSize, y);
-          //   p.noStroke();
-          // }
-
-          // if (!isSameColor(thisColor, bottomColor)) {
-          //   p.stroke(lineColor);
-          //   p.line(x, y + nodeSize, x + nodeSize, y + nodeSize);
-          //   p.noStroke();
-          // }
-
-          // if (!isSameColor(thisColor, leftColor)) {
-          //   p.stroke(lineColor);
-          //   p.line(x, y, x, y + nodeSize);
-          //   p.noStroke();
-          // }
-
-          // if (!isSameColor(thisColor, rightColor)) {
-          //   p.stroke(lineColor);
-          //   p.line(x + nodeSize, y, x + nodeSize, y + nodeSize);
-          //   p.noStroke();
-          // }
         }
       }
     };
