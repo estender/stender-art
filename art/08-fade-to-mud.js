@@ -8,7 +8,7 @@ export default {
     let nodeSize;
     let nodes = [];
 
-    const maxRowsOrCols = 50;
+    const maxRowsOrCols = 36;
     const creepDistance = 20; // distance in tiles when determining same color neighbor
     const colorCount = 48;
     const lineColor = p.color(80, 80, 80);
