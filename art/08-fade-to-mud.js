@@ -8,7 +8,8 @@ export default {
     let nodeSize;
     let nodes = [];
 
-    const creepDistance = 20; // distance in tiles when determining same color neighbors
+    const maxRowsOrCols = 50;
+    const creepDistance = 20; // distance in tiles when determining same color neighbor
     const colorCount = 48;
     const lineColor = p.color(80, 80, 80);
 
@@ -238,7 +239,7 @@ export default {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
 
-      nodeSize = Math.floor(Math.max(p.width, p.height) / 30);
+      nodeSize = Math.floor(Math.max(p.width, p.height) / maxRowsOrCols);
       rowCount = Math.ceil(p.width / nodeSize);
       colCount = Math.ceil(p.height / nodeSize);
 

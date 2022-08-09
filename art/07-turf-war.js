@@ -6,6 +6,7 @@ export default {
     let nodeSize;
     let nodes = [];
 
+    const maxRowsOrCols = 50;
     const creepDistance = 20; // distance in tiles to search when flipping colors
     const colorCount = 24;
     const lineColor = p.color(80, 80, 80);
@@ -90,7 +91,7 @@ export default {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
 
-      nodeSize = Math.floor(Math.min(p.width, p.height) / 32);
+      nodeSize = Math.floor(Math.max(p.width, p.height) / maxRowsOrCols);
       rowCount = Math.ceil(p.width / nodeSize);
       colCount = Math.ceil(p.height / nodeSize);
 
