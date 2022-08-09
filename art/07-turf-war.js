@@ -6,9 +6,9 @@ export default {
     let nodeSize;
     let nodes = [];
 
-    const maxRowsOrCols = 50;
+    const maxRowsOrCols = 64;
     const creepDistance = 20; // distance in tiles to search when flipping colors
-    const colorCount = 24;
+    const colorCount = 20;
     const lineColor = p.color(80, 80, 80);
 
     const randomColor = function() {
