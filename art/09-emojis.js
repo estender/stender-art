@@ -114,8 +114,8 @@ const drawRow = function(p, row, rowPosition, rowCount) {
   let elementCount = row.length;
   let sinXOffset = p.sin(rowPosition + (p.frameCount * 4 / p.width)) * (p.width / 8);
   row.map((element, elementPosition) => {
-  let x =
-      xCenter + sinXOffset + rowHeight * (elementPosition - elementCount / 2);
+    let x =
+        xCenter + sinXOffset + rowHeight * (elementPosition - elementCount / 2);
     p.text(element, x, y);
   });
 };
