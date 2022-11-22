@@ -1,4 +1,3 @@
-import runes from 'runes';
 import { oneOrNegOne, randomElement, isOdd } from './helpers';
 
 const allEmojis = [
@@ -91,30 +90,66 @@ const randomEmoji = function() {
   return randomElement(allEmojis);
 }
 
-const textSize = 30;
+const rowHeight = 40;
+
+const drawDancingTree = function(p, tree) {
+  let rowCount = tree.length;
+  tree.map((row, i) => drawRow(p, row, i, rowCount));
+};
+
+const drawRow = function(p, row, rowPosition, rowCount) {
+  // let isBigText = isOdd(rowPosition);
+  // // if (p.frameCount % 200 > 100) {
+  // //   isBigText = !isBigText;
+  // // }
+  // let textSizeModifier = isBigText ? 2 : -2;
+  // let textSize = rowHeight; // + (textSizeModifier * (p.cos(rowPosition + p.frameCount / 400) * 2));
+  // p.textSize(textSize);
+  let scrollModifier = p.frameCount / 4;
+  let totalHeight = (rowCount * rowHeight);
+  let y =
+    totalHeight / 2 +
+    ((rowPosition * rowHeight - scrollModifier) % totalHeight);
+  let xCenter = p.width / 2;
+  let elementCount = row.length;
+  let sinXOffset = p.sin(rowPosition + (p.frameCount * 4 / p.width)) * (p.width / 8);
+  row.map((element, elementPosition) => {
+  let x =
+      xCenter + sinXOffset + rowHeight * (elementPosition - elementCount / 2);
+    p.text(element, x, y);
+  });
+};
+
+const addEmoji = function(tree, rowNumber, element) {
+  tree[rowNumber].push(element);
+};
+
+const removeEmoji = function(tree, rowNumber, element) {
+  if (tree[rowNumber].length > 1) {
+    const [first, ...remaining] = tree[rowNumber];
+    tree[rowNumber] = remaining;
+  }
+};
 
 export default {
   name: 'Feelings',
   iconColor: '#000',
   script: function (p) {
     let rowCount;
-    const maxCols = 20;
-
     let emojiTree;
-
-    const maxRowsOrCols = 36;
-    const creepDistance = 20; // distance in tiles when determining same color neighbor
-    const colorCount = 48;
-    const lineColor = p.color(80, 80, 80);
 
     p.setup = function () {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
       p.textAlign(p.CENTER)
-      p.textSize(textSize);
+      p.textSize(rowHeight);
 
-      rowCount = Math.ceil(p.height / textSize);
-      emojiTree = new Array(rowCount);
+      rowCount = Math.ceil(p.height / rowHeight) * 2;
+      // initialize tree
+      emojiTree = [];
+      for (let i = 0; i < rowCount; i++) {
+        emojiTree[i] = [];
+      }
     };
 
 
@@ -123,47 +158,15 @@ export default {
 
       let randomRow = Math.floor(Math.random() * rowCount);
 
-      if (p.frameCount % 3 === 0) {
-        if (p.frameCount < 200 || p.frameCount % 400 > 240) {
-          // add an emoji
-          let line = emojiTree[randomRow] || '';
-          let randomChar = Math.floor(Math.random() * line.length);
-          // emojiTree[randomRow] =
-          //   line.length > 0
-          //     ? runes.substr(line, 0, randomChar) +
-          //       randomEmoji() +
-          //       runes.substr(line, randomChar)
-          //     : randomEmoji();
-
-          emojiTree[randomRow] = isOdd(p.frameCount)
-            ? line + randomEmoji()
-            : randomEmoji() + line;
+      if (p.frameCount % 4 === 0) {
+        if (p.frameCount < 600 || p.frameCount % 500 > 300) {
+          addEmoji(emojiTree, randomRow, randomEmoji());
         } else {
-          // remove an emoji
-          let line = emojiTree[randomRow] || '';
-          let randomChar = Math.floor(Math.random() * line.length);
-          if (randomChar === 0) {
-            randomChar = 1;
-          }
-          // if (line.length > 2 && randomChar > 0) {
-          //   emojiTree[randomRow] =
-          //     runes.substr(line, 0, randomChar - 1) +
-          //     runes.substr(line, randomChar);
-          // }
-
-          if (line.length > 2) {
-            emojiTree[randomRow] = isOdd(p.frameCount)
-              ? runes.substr(line, 0, line.length - 1)
-              : runes.substr(line, 1, line.length);
-          }
+          removeEmoji(emojiTree, randomRow, randomEmoji());
         }
       }
 
-
-      // display emojis
-      for (let i = 0; i < rowCount; i++) {
-        p.text(emojiTree[i], p.width / 2, textSize * i);
-      }
+      drawDancingTree(p, emojiTree);
     };
   },
 };
