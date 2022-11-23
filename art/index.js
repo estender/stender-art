@@ -6,8 +6,10 @@ import Camouflage from './05-camo';
 import Clover from './06-clover';
 import TurfWar from './07-turf-war';
 import FadeToMud from './08-fade-to-mud';
+import Emojis from './09-emojis';
 
 export const artCollection = [
+  Emojis,
   FadeToMud,
   TurfWar,
   Clover,
