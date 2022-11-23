@@ -100,13 +100,6 @@ const drawDancingTree = function(p, tree) {
 };
 
 const drawRow = function(p, row, rowPosition, rowCount) {
-  // let isBigText = isOdd(rowPosition);
-  // // if (p.frameCount % 200 > 100) {
-  // //   isBigText = !isBigText;
-  // // }
-  // let textSizeModifier = isBigText ? 2 : -2;
-  // let textSize = rowHeight; // + (textSizeModifier * (p.cos(rowPosition + p.frameCount / 400) * 2));
-  // p.textSize(textSize);
   let scrollModifier = p.frameCount / 4;
   let totalHeight = (rowCount * rowHeight);
   let y =
