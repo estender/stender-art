@@ -90,7 +90,7 @@ const randomEmoji = function() {
   return randomElement(allEmojis);
 }
 
-const rowHeight = 40;
+const rowHeight = 40;   // row height and emoji font size in pixels
 const shiftSpeed = 0.2; // number of pixels to shift row horizontally when adding/removing
 const fadeSpeed = 0.02; // amount of opacity (0.0 to 1.0) to change fade per frame
 
@@ -100,8 +100,8 @@ const drawDancingTree = function(p, tree) {
 };
 
 const drawRow = function(p, row, rowPosition, rowCount) {
-  let scrollModifier = p.frameCount / 4;
   let totalHeight = (rowCount * rowHeight);
+  let scrollModifier = p.frameCount / 4;
   let y =
     rowHeight * 2 + totalHeight / 1.5 +
     ((rowPosition * rowHeight - scrollModifier) % totalHeight);
@@ -203,29 +203,41 @@ export default {
   iconColor: '#000',
   script: function (p) {
     let emojiTree;
+    let growthThreshold; // period of frames between addition and removal phases
+    let growthMultiplier = 0.9; // 1.0 mostly stable, more than 1 continual growth, less than one returns to empty
 
     p.setup = function () {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
-      p.textAlign(p.CENTER)
+      p.textAlign(p.CENTER);
       p.textSize(rowHeight);
 
-      let rowCount = rowCount = Math.ceil(p.height / rowHeight) * 1.4;
+      growthThreshold = Math.min(800, 300 + p.width);
+
+      let rowCount = (rowCount = Math.ceil(p.height / rowHeight) * 1.4);
       emojiTree = createInitialTree(rowCount);
     };
 
     p.draw = function () {
       p.background(255);
 
+      // update tree every X frames
       if (p.frameCount % 2 === 0) {
         let randomRow = Math.floor(Math.random() * emojiTree.length);
-        if (p.frameCount % (200 + p.width * 3) < (100 + p.width * 1.5)) {
+
+        // queue addition or removal of emoji's
+        // oscillate between adding and removing emoji's based on time and growth params
+        if (
+          p.frameCount % (2 * growthThreshold) <
+          growthThreshold * growthMultiplier
+        ) {
           addEmoji(emojiTree, randomRow);
         } else {
           removeEmoji(emojiTree, randomRow);
         }
       }
 
+      // draw (modifies emojiTree)
       drawDancingTree(p, emojiTree);
     };
   },
