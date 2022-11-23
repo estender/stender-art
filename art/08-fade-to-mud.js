@@ -240,8 +240,8 @@ export default {
       p.noStroke();
 
       nodeSize = Math.floor(Math.max(p.width, p.height) / maxRowsOrCols);
-      rowCount = Math.ceil(p.width / nodeSize);
-      colCount = Math.ceil(p.height / nodeSize);
+      rowCount = Math.ceil(p.width / (nodeSize * 2)) * 2 + 1;
+      colCount = Math.ceil(p.height / (nodeSize * 2)) * 2 + 1;
 
       for (let i = 0; i < rowCount; i++) {
         if (!nodes[i]) {
@@ -263,15 +263,10 @@ export default {
         isMelting = !isMelting;
       }
 
-      // forceCheckboardModifier adds +/- 1 to 2nd tile flipped
-      // to random color, to force a different row to be
-      // flipped than the tile on the left
-      let forceCheckboardModifier =
-        isOdd(nodes[0].lengh) || flipQueueCounter <= 1 ? 0 : -1;
       let [chosenI1, chosenJ1] = flipQueue[flipQueueCounter - 1];
       let [chosenI2, chosenJ2] =
         flipQueue[
-          flipQueue.length - flipQueueCounter - forceCheckboardModifier
+          flipQueue.length - flipQueueCounter
         ];
       if (isMelting) {
         // lerp colors to browns
