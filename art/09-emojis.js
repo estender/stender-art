@@ -152,7 +152,7 @@ const drawRow = function(p, row, rowPosition, rowCount) {
 
   let elementCount = row.elements.length;
   let sinXOffset =
-    p.sin(rowPosition + (p.frameCount * 4) / p.width) * ((p.width / 2) - 100);
+    p.sin(rowPosition + (p.frameCount * 4) / p.width) * (p.width / 7);
 
   row.elements.map((element, elementPosition) => {
     let x =
@@ -224,7 +224,7 @@ export default {
       let randomRow = Math.floor(Math.random() * rowCount);
 
       if (p.frameCount % 2 === 0) {
-        if (p.frameCount % 1200 < 550) {
+        if (p.frameCount % (200 + p.width * 3) < (100 + p.width * 1.5)) {
           addEmoji(emojiTree, randomRow);
         } else {
           removeEmoji(emojiTree, randomRow);
