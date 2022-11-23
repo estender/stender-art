@@ -183,7 +183,7 @@ const addEmoji = function(tree, rowNumber) {
 
 const removeEmoji = function(tree, rowNumber) {
   const { elements, isAdding, isRemoving } = tree[rowNumber];
-  if (!isAdding && !isRemoving) {
+  if (!isAdding && !isRemoving && elements.length > 0) {
     tree[rowNumber].isRemoving = true;
     tree[rowNumber].shiftCounter = 0;
     tree[rowNumber].fadeOpacity = 1;
@@ -224,7 +224,7 @@ export default {
       let randomRow = Math.floor(Math.random() * rowCount);
 
       if (p.frameCount % 2 === 0) {
-        if (p.frameCount % 800 < 400) {
+        if (p.frameCount % 1200 < 550) {
           addEmoji(emojiTree, randomRow);
         } else {
           removeEmoji(emojiTree, randomRow);
