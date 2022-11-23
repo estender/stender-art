@@ -230,9 +230,15 @@ export default {
     let flipQueueCounter = 0;
     let isMelting = false; // true when tiles are lerping to brown, false when rebuilding random tiles
 
+    let xCenter;
+    let yCenter;
+
     p.setup = function () {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
+
+      xCenter = p.width / 2;
+      yCenter = p.height / 2;
 
       nodeSize = Math.floor(Math.max(p.width, p.height) / maxRowsOrCols);
       rowCount = Math.ceil(p.width / (nodeSize * 2)) * 2 + 1;
@@ -280,8 +286,8 @@ export default {
       for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
           // top-left corner coords
-          let x = i * nodeSize;
-          let y = j * nodeSize;
+          let x = xCenter + (i - rowCount / 2) * nodeSize;
+          let y = yCenter + (j - colCount / 2) * nodeSize;
           let half = nodeSize / 2;
           let thisColor = nodes[i][j];
 
