@@ -92,6 +92,7 @@ const randomEmoji = function() {
 
 const rowHeight = 40;
 const shiftSpeed = 0.2;
+const fadeSpeed = 0.02;
 
 const drawDancingTree = function(p, tree) {
   let rowCount = tree.length;
@@ -117,8 +118,16 @@ const drawRow = function(p, row, rowPosition, rowCount) {
   if (row.isAdding) {
     if (row.shiftCounter < rowHeight / -2) {
       row.elements.push(randomEmoji());
-      row.isAdding = false;
-      row.shiftCounter = 0;
+      row.shiftCounter = 1;
+      row.fadeOpacity = 0;
+    } else if (row.shiftCounter == 1) {
+      if (row.fadeOpacity > 1) {
+        row.isAdding = false;
+        row.fadeOpacity = 0;
+        row.shiftCounter = 0;
+      } else {
+        row.fadeOpacity += fadeSpeed;
+      }
     } else {
       row.shiftCounter -= shiftSpeed;
       shiftOffset = row.shiftCounter;
@@ -126,15 +135,19 @@ const drawRow = function(p, row, rowPosition, rowCount) {
   }
 
   if (row.isRemoving) {
-    if (row.shiftCounter < rowHeight / -2) {
+    if (row.shiftCounter > rowHeight / -2) {
+      row.shiftCounter -= shiftSpeed;
+    } else if (row.fadeOpacity > 0) {
+      row.fadeOpacity -= fadeSpeed;
+    } else {
       const [first, ...remaining] = row.elements;
       row.elements = remaining;
       row.isRemoving = false;
       row.shiftCounter = 0;
-    } else {
-      row.shiftCounter -= shiftSpeed;
-      shiftOffset = row.shiftCounter;
+      row.fadeOpacity = 0;
     }
+
+    shiftOffset = row.shiftCounter;
   }
 
   let elementCount = row.elements.length;
@@ -147,28 +160,33 @@ const drawRow = function(p, row, rowPosition, rowCount) {
       sinXOffset +
       shiftOffset +
       rowHeight * (1 + elementPosition - elementCount / 2);
+    let color = p.color(0, 0, 0);
+    if (
+      (row.isRemoving && elementPosition === 0) ||
+      (row.isAdding && elementPosition === elementCount - 1 && row.fadeOpacity >= 0)
+    ) {
+      color.setAlpha(row.fadeOpacity * 256);
+    }
+    p.fill(color);
     p.text(element, x, y);
   });
 };
 
-const addEmoji = function(tree, rowNumber, element) {
+const addEmoji = function(tree, rowNumber) {
   const { isAdding, isRemoving } = tree[rowNumber];
   if (!isAdding && !isRemoving) {
     tree[rowNumber].isAdding = true;
     tree[rowNumber].shiftCounter = 0;
+    tree[rowNumber].fadeOpacity = -1;
   }
 };
 
-const removeEmoji = function(tree, rowNumber, element) {
+const removeEmoji = function(tree, rowNumber) {
   const { elements, isAdding, isRemoving } = tree[rowNumber];
   if (!isAdding && !isRemoving) {
-    const [first, ...remaining] = elements;
-    tree[rowNumber] = {
-      elements: elements,
-      isAdding: false,
-      isRemoving: true,
-      shiftCounter: 0,
-    };
+    tree[rowNumber].isRemoving = true;
+    tree[rowNumber].shiftCounter = 0;
+    tree[rowNumber].fadeOpacity = 1;
   }
 };
 
@@ -193,7 +211,8 @@ export default {
           elements: [],
           isAdding: false,
           isRemoving: false,
-          shiftCounter: 0
+          shiftCounter: 0,
+          fadeOpacity: 0,
         };
       }
     };
@@ -204,10 +223,12 @@ export default {
 
       let randomRow = Math.floor(Math.random() * rowCount);
 
-      if (p.frameCount % 800 < 400) {
-        addEmoji(emojiTree, randomRow, randomEmoji());
-      } else {
-        removeEmoji(emojiTree, randomRow, randomEmoji());
+      if (p.frameCount % 2 === 0) {
+        if (p.frameCount % 800 < 400) {
+          addEmoji(emojiTree, randomRow);
+        } else {
+          removeEmoji(emojiTree, randomRow);
+        }
       }
 
       drawDancingTree(p, emojiTree);
