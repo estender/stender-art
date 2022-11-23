@@ -146,7 +146,7 @@ const drawRow = function(p, row, rowPosition, rowCount) {
       xCenter +
       sinXOffset +
       shiftOffset +
-      rowHeight * (elementPosition - elementCount / 2);
+      rowHeight * (1 + elementPosition - elementCount / 2);
     p.text(element, x, y);
   });
 };
