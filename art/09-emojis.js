@@ -204,12 +204,10 @@ export default {
 
       let randomRow = Math.floor(Math.random() * rowCount);
 
-      if (p.frameCount % 2 === 0) {
-        if (p.frameCount < 400 || p.frameCount % 400 > 200) {
-          addEmoji(emojiTree, randomRow, randomEmoji());
-        } else {
-          removeEmoji(emojiTree, randomRow, randomEmoji());
-        }
+      if (p.frameCount % 800 < 400) {
+        addEmoji(emojiTree, randomRow, randomEmoji());
+      } else {
+        removeEmoji(emojiTree, randomRow, randomEmoji());
       }
 
       drawDancingTree(p, emojiTree);
