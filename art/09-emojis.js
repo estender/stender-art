@@ -110,7 +110,7 @@ const drawRow = function(p, row, rowPosition, rowCount) {
   let scrollModifier = p.frameCount / 4;
   let totalHeight = (rowCount * rowHeight);
   let y =
-    rowHeight + totalHeight / 1.5 +
+    rowHeight * 2 + totalHeight / 1.5 +
     ((rowPosition * rowHeight - scrollModifier) % totalHeight);
   let xCenter = p.width / 2;
 
