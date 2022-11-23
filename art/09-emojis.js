@@ -1,4 +1,4 @@
-import { oneOrNegOne, randomElement, isOdd } from './helpers';
+import { randomElement } from './helpers';
 
 const allEmojis = [
   '😀',
@@ -91,8 +91,8 @@ const randomEmoji = function() {
 }
 
 const rowHeight = 40;
-const shiftSpeed = 0.2;
-const fadeSpeed = 0.02;
+const shiftSpeed = 0.2; // number of pixels to shift row horizontally when adding/removing
+const fadeSpeed = 0.02; // amount of opacity (0.0 to 1.0) to change fade per frame
 
 const drawDancingTree = function(p, tree) {
   let rowCount = tree.length;
@@ -105,7 +105,6 @@ const drawRow = function(p, row, rowPosition, rowCount) {
   let y =
     rowHeight * 2 + totalHeight / 1.5 +
     ((rowPosition * rowHeight - scrollModifier) % totalHeight);
-  let xCenter = p.width / 2;
 
   let shiftOffset = 0;
   if (row.isAdding) {
@@ -143,10 +142,12 @@ const drawRow = function(p, row, rowPosition, rowCount) {
     shiftOffset = row.shiftCounter;
   }
 
-  let elementCount = row.elements.length;
+  let xCenter = p.width / 2;
   let sinXOffset =
     p.sin(rowPosition + (p.frameCount * 4) / p.width) * (p.width / 7);
 
+  // draw rows
+  let elementCount = row.elements.length;
   row.elements.map((element, elementPosition) => {
     let x =
       xCenter +
@@ -183,11 +184,24 @@ const removeEmoji = function(tree, rowNumber) {
   }
 };
 
+const createInitialTree = function (rowCount) {
+  let tree = [];
+  for (let i = 0; i < rowCount; i++) {
+    tree[i] = {
+      elements: [],
+      isAdding: false,
+      isRemoving: false,
+      shiftCounter: 0,
+      fadeOpacity: 0,
+    };
+  }
+  return tree;
+};
+
 export default {
   name: 'Feelings',
   iconColor: '#000',
   script: function (p) {
-    let rowCount;
     let emojiTree;
 
     p.setup = function () {
@@ -196,27 +210,15 @@ export default {
       p.textAlign(p.CENTER)
       p.textSize(rowHeight);
 
-      rowCount = Math.ceil(p.height / rowHeight) * 1.4;
-      // initialize tree
-      emojiTree = [];
-      for (let i = 0; i < rowCount; i++) {
-        emojiTree[i] = {
-          elements: [],
-          isAdding: false,
-          isRemoving: false,
-          shiftCounter: 0,
-          fadeOpacity: 0,
-        };
-      }
+      let rowCount = rowCount = Math.ceil(p.height / rowHeight) * 1.4;
+      emojiTree = createInitialTree(rowCount);
     };
-
 
     p.draw = function () {
       p.background(255);
 
-      let randomRow = Math.floor(Math.random() * rowCount);
-
       if (p.frameCount % 2 === 0) {
+        let randomRow = Math.floor(Math.random() * emojiTree.length);
         if (p.frameCount % (200 + p.width * 3) < (100 + p.width * 1.5)) {
           addEmoji(emojiTree, randomRow);
         } else {
