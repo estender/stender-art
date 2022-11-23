@@ -74,11 +74,6 @@ export default {
     };
 
     const isSameColor = function(c1, c2) {
-      // console.log(
-      //   'isSameColor',
-      //   c1.toString() === c2.toString(),
-      //   c1.toString(), c2.toString()
-      // );
       return c1.toString() === c2.toString();
     }
 
