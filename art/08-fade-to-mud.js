@@ -74,11 +74,6 @@ export default {
     };
 
     const isSameColor = function(c1, c2) {
-      // console.log(
-      //   'isSameColor',
-      //   c1.toString() === c2.toString(),
-      //   c1.toString(), c2.toString()
-      // );
       return c1.toString() === c2.toString();
     }
 
@@ -235,13 +230,19 @@ export default {
     let flipQueueCounter = 0;
     let isMelting = false; // true when tiles are lerping to brown, false when rebuilding random tiles
 
+    let xCenter;
+    let yCenter;
+
     p.setup = function () {
       p.createCanvas(p.windowWidth, p.windowHeight);
       p.noStroke();
 
+      xCenter = p.width / 2;
+      yCenter = p.height / 2;
+
       nodeSize = Math.floor(Math.max(p.width, p.height) / maxRowsOrCols);
-      rowCount = Math.ceil(p.width / nodeSize);
-      colCount = Math.ceil(p.height / nodeSize);
+      rowCount = Math.ceil(p.width / (nodeSize * 2)) * 2 + 1;
+      colCount = Math.ceil(p.height / (nodeSize * 2)) * 2 + 1;
 
       for (let i = 0; i < rowCount; i++) {
         if (!nodes[i]) {
@@ -263,15 +264,10 @@ export default {
         isMelting = !isMelting;
       }
 
-      // forceCheckboardModifier adds +/- 1 to 2nd tile flipped
-      // to random color, to force a different row to be
-      // flipped than the tile on the left
-      let forceCheckboardModifier =
-        isOdd(nodes[0].lengh) || flipQueueCounter <= 1 ? 0 : -1;
       let [chosenI1, chosenJ1] = flipQueue[flipQueueCounter - 1];
       let [chosenI2, chosenJ2] =
         flipQueue[
-          flipQueue.length - flipQueueCounter - forceCheckboardModifier
+          flipQueue.length - flipQueueCounter
         ];
       if (isMelting) {
         // lerp colors to browns
@@ -290,8 +286,8 @@ export default {
       for (let i = 0; i < rowCount; i++) {
         for (let j = 0; j < colCount; j++) {
           // top-left corner coords
-          let x = i * nodeSize;
-          let y = j * nodeSize;
+          let x = xCenter + (i - rowCount / 2) * nodeSize;
+          let y = yCenter + (j - colCount / 2) * nodeSize;
           let half = nodeSize / 2;
           let thisColor = nodes[i][j];
 
