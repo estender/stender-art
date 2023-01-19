@@ -1,5 +1,5 @@
 export default {
-  name: 'Gears',
+  name: 'The Grind',
   iconColor: '#aaa',
   script: function (p) {
     // let rows, cols, size, gridSize;
