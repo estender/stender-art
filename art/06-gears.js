@@ -1,6 +1,6 @@
 export default {
   name: 'The Grind',
-  iconColor: '#aaa',
+  iconColor: '#ddd',
   script: function (p) {
     // let rows, cols, size, gridSize;
     let radius = 55;

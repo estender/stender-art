@@ -1,6 +1,6 @@
 export default {
   name: 'Color Clover',
-  iconColor: '#aaa',
+  iconColor: '#666',
   script: function (p) {
     let globalAngle = 0;
 

@@ -1,6 +1,6 @@
 export default {
   name: 'Camouflage',
-  iconColor: '#aaa',
+  iconColor: '#ddd',
   script: function (p) {
     let rows, cols, size, gridSize;
     let xmid, ymid;
