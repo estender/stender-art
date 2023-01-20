@@ -3,13 +3,16 @@ import dynamic from 'next/dynamic'
 import styles from '../styles/Home.module.css'
 import {
   Card,
+  CodeIcon,
   CircleArrowRightIcon,
   Heading,
   Menu,
   MenuOpenIcon,
   Pane,
   Paragraph,
+  PersonIcon,
   Position,
+  ShareIcon,
   SideSheet,
   RepeatIcon,
 } from 'evergreen-ui';
@@ -51,10 +54,22 @@ export default function Home() {
                     <Heading size={600}>Art by Eric Stender</Heading>
                     <Paragraph size={400}>
                       <a href="https://stender.io" target="_blank">
+                        <PersonIcon marginRight={5} size={11} />
                         https://stender.io
+                        <ShareIcon marginLeft={5} size={11} />
                       </a>
                     </Paragraph>
                     <Paragraph size={400}>Made with JavaScript & p5</Paragraph>
+                    <Paragraph>
+                      <a
+                        target="_blank"
+                        href="https://github.com/estender/stender-art/tree/master/art"
+                      >
+                        <CodeIcon marginRight={5} size={11} />
+                        View source on Github
+                        <ShareIcon marginLeft={5} size={11} />
+                      </a>
+                    </Paragraph>
                   </Pane>
                 </Pane>
                 <Pane
