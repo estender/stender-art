@@ -3,11 +3,12 @@ export default {
   iconColor: '#ddd',
   script: function (p) {
     // let rows, cols, size, gridSize;
-    let radius = 55;
+    let maxWindowSize = Math.max(p.windowHeight, p.windowWidth);
+    let radius = maxWindowSize / 25;
     let cols = Math.ceil(p.windowWidth / (radius * 1.9));
     let rows = Math.ceil(p.windowHeight / (radius * 1.9));
-    // let xmid, ymid;
-    function star(x, y, radius1, radius2, npoints) {
+
+    function drawGear(x, y, radius1, radius2, npoints) {
       let angle = p.TWO_PI / npoints;
       let halfAngle = angle / 2.0;
       p.beginShape();
@@ -45,10 +46,10 @@ export default {
             p.height * (j / rows) + (xoffset * radius) / 2
           );
           p.rotate((p.frameCount / 200.0) * direction);
-          star(
+          drawGear(
             0,
             0,
-            (radius - 20) * (1 + grow + colorfade * 0.2),
+            (radius * 0.6) * (1 + grow + colorfade * 0.2),
             radius * (1 + grow + colorfade * 0.2),
             20
           );
